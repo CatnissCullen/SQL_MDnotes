@@ -37,6 +37,8 @@
 
 >   #### `CREATE TABLE`
 >
+>   ***'referenced' must be created before 'referencing'***
+>
 >   ```sql
 >   CREATE TABLE <relation_name> (
 >       attribute_1 <domain_1>,
@@ -160,10 +162,53 @@
 >
 >   ***insert data (tuples) to table***
 >
+>   ***'referenced' must be inserted before 'referencing'***
+>
+>   ```sql
+>   CREATE TABLE <relation_name> (
+>       attribute_1 <domain_1>,
+>       attribute_2 <domain_2> NOT NULL,
+>       attribute_3 <domain_3> CHECK(attribute_3>0),  # check-clause usage 1 (inline)
+>       attribute_4 <domain_4>
+>       ...
+>       attribute_n <domain_n>,
+>       PRIMARY KEY(attribute_1),
+>       FOREIGN KEY(attribute_2) REFERENCES <another_relation_name> ON DELETE SET NULL,
+>       CONSTRAINT <constraint_name> CHECK(attribute_4 IN (`v1`,`v2`,`v3`))  # check-clause usage 2 (specifying a enumerated domain)
+>       CHECK(attribute_n>1)  # check-clause usage 3 (outline)
+>   )
+>       
+>   ```
+>
 >   ```SQL
 >   INSERT INTO <relation_name> VALUES <tuple_of_values_of_all_attributes>
 >   INSERT INTO <relation_name>(attr_i, attr_j, attr_k) VALUES(v_i, v_j, v_k)  # other attributes will have default values 
 >   ```
+>
+>   #### `UPDATE`
+>
+>   ***to change only part of the values in a tuple of a table***
+>
+>   ***the updates order is important due to the where-condition!!!!!!!!***
+>
+>   ```sql
+>   UPDATE <relation_name>
+>   	SET attr_i=<expr>|NULL|<subquery_1>,
+>   	    attr_j=<expr>|NULL|<subquery_1>,
+>   	    ...,
+>   	WHERE ...   
+>   ```
+>
+>   #### `DELETE`
+>
+>   ***delete TUPLES from a table***
+>
+>   ```SQL
+>   DELETE FROM <relation_name>  # delete all tuples but reserve the table structure in stored
+>   DELETE FROM <relation_name> WHERE ...
+>   ```
+>
+>   
 >
 >   #### `UNION, INTERSECT, EXCEPT`
 >
